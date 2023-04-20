@@ -2,6 +2,8 @@ package effects
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Await
+import scala.concurrent.duration.*
 
 object FuturesProgram:
 
@@ -14,4 +16,4 @@ object FuturesProgram:
     hello.flatMap(_ => hello)
 
   @main def main() =
-    twice.map(_ => ())
+    Await.ready(twice, 1.second)
