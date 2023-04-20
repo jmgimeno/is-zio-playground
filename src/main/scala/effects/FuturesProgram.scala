@@ -16,4 +16,4 @@ object FuturesProgram:
     hello.flatMap(_ => hello)
 
   @main def main() =
-    Await.ready(twice, 1.second)
+    Await.ready(notTwice, 1.second)

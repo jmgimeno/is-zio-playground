@@ -2,13 +2,19 @@ package effects
 
 object MyIOProgram:
 
-  def twice =
+  val twice: MyIO[Unit] =
     MyIO(println("Hello"))
-      .flatMap(_ => MyIO(println("Hello")))
+      *> MyIO(println("Hello"))
 
-  def alsoTwice =
+  val twiceViaFor: MyIO[Unit] =
+    for
+      _ <- MyIO(println("Hello"))
+      _ <- MyIO(println("Hello"))
+    yield ()
+
+  val alsoTwice: MyIO[Unit] =
     val hello = MyIO(println("Hello"))
-    hello.flatMap(_ => hello)
+    hello *> hello
 
-  @main def run() =
-    twice.unsafeRun()
+  @main def run(): Unit =
+    twiceViaFor.repeatN(5).unsafeRun()
