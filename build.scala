@@ -1,0 +1,5 @@
+//> using scala "3.2.2"
+//> using lib "dev.zio::zio:2.0.13"
+//> using lib "dev.zio::zio-test:2.0.13"
+//> using lib "dev.zio::zio-test-sbt:2.0.13"
+//> using lib "dev.zio::zio-test-magnolia:2.0.13"
