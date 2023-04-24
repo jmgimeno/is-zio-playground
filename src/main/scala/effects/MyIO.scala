@@ -11,7 +11,7 @@ class MyIO[A](val unsafeRun: () => A):
       nextIO.unsafeRun()
     )
 
-  def *>[B](iob: MyIO[B]): MyIO[B] =
+  def *>[B](iob: => MyIO[B]): MyIO[B] =
     flatMap(_ => iob)
 
   def repeatN(n: Int): MyIO[A] =
