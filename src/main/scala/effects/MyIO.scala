@@ -1,9 +1,12 @@
 package effects
 
-class MyIO[A](val unsafeRun: () => A):
+class MyIO[A] private (val unsafeRun: () => A):
 
   def map[B](f: A => B): MyIO[B] =
     new MyIO(() => f(unsafeRun()))
+
+  // def map[B](f: A => B): MyIO[B] =
+  //   flatMap(a => MyIO(f(a)))
 
   def flatMap[B](f: A => MyIO[B]): MyIO[B] =
     new MyIO(() =>

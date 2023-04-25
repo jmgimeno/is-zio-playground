@@ -12,6 +12,13 @@ object MyIOProgram:
       _ <- MyIO(println("Hello"))
     yield ()
 
+  val twiceViaFlatMapAndMap: MyIO[Unit] =
+    MyIO(println("Hello")).flatMap { _ =>
+      MyIO(println("Hello")).map { _ =>
+        ()
+      }
+    }
+
   val alsoTwice: MyIO[Unit] =
     val hello = MyIO(println("Hello"))
     hello *> hello
