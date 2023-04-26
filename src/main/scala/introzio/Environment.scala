@@ -18,10 +18,10 @@ object Environment extends ZIOAppDefault:
       _ <- logger.get.log("another")
     yield ()
 
-  val logged =
+  val logged: ZIO[MyLogger, Nothing, Unit] =
     for
-      logger <- ZIO.environment[MyLogger]
-      _ <- logger.get.log("message")
+      _ <- anotherLogged
+      _ <- ZIO.attempt(println("Hola")).orDie
       _ <- anotherLogged
     yield ()
 
@@ -29,4 +29,8 @@ object Environment extends ZIOAppDefault:
   // we pass an anonymous instance of MyLogger
 
   def run =
-    logged.provideEnvironment(ZEnvironment(s => ZIO.attempt(println(s)).!))
+    logged.provideEnvironment(
+      ZEnvironment(_ =>
+        ZIO.succeed(())
+      ) // s => ZIO.attempt(println(s"log: $s")).orDie)
+    )

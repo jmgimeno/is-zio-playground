@@ -20,6 +20,6 @@ object Errors extends ZIOAppDefault:
 
   def run: ZIO[Any, Nothing, Unit] =
     readAndSumTwoInts.foldZIO(
-      _ => writeLine("ERROR: Bad number"),
-      sum => writeLine("The sum is $sum")
+      e => writeLine(s"ERROR: Bad number ${e.getMessage}"),
+      sum => writeLine(s"The sum is $sum")
     )
