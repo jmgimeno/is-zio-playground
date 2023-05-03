@@ -4,11 +4,18 @@ import zio.*
 
 object AsyncZ extends ZIOAppDefault:
 
-  def readIntAsync(cb: Int => Unit): Unit =
+  def readIntSync(): Int =
+    val n = StdIn.readInt()
+    return n
+
+  def readIntAsync[B](cb: Int => B): B =
     val n = StdIn.readInt()
     cb(n)
 
-  def doubleAsync(n: Int)(cb: Int => Unit): Unit =
+  def doubleSync(n: Int): Int =
+    return 2 * n
+
+  def doubleAsync[B](n: Int)(cb: Int => B): B =
     cb(2 * n)
 
   val readIntZ: ZIO[Any, Nothing, Int] =
