@@ -4,7 +4,7 @@ import zio.*
 
 object Basic extends ZIOAppDefault:
 
-  def step[A](a: A) =
+  def step[A](a: A): UIO[A] =
     (ZIO.debug(s"begin $a")
       *> ZIO.sleep(500.millis)
       *> ZIO.succeed(a)
@@ -19,10 +19,11 @@ object Basic extends ZIOAppDefault:
 
   val program2 =
     for
-      f1 <- step(1).fork
-      f2 <- step(2).fork
-      f3 <- step(3).fork
-    // _ <- (f1 <*> f2 <*> f3).join
+      fib1 <- step(1).fork
+      fib2 <- step(2).fork
+      fib3 <- step(3).fork
+      results <- (fib1 <*> fib2 <*> fib3).join
+      _ <- Console.printLine(s"results $results")
     yield ()
 
   val program3 =
@@ -31,4 +32,4 @@ object Basic extends ZIOAppDefault:
   val program4 =
     ZIO.foreachPar(1 to 20)(step)
 
-  val run = program1.debugThread
+  val run = program2
