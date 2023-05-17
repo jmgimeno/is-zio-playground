@@ -8,7 +8,10 @@ object RealRef extends ZIOAppDefault:
     for
       shared <- Ref.make(0)
       _ <- ZIO.foreachParDiscard(1 to 10000) { _ =>
-        shared.get.flatMap(n => shared.set(n + 1))
+        for
+          v <- shared.get
+          _ <- shared.set(v + 1)
+        yield ()
       }
       result <- shared.get
     yield result
@@ -22,4 +25,4 @@ object RealRef extends ZIOAppDefault:
       result <- shared.get
     yield result
 
-  val run = programBad.debug
+  val run = program.debug

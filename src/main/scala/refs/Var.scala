@@ -19,6 +19,23 @@ object Var:
       def update(f: A => A): UIO[Unit] = ZIO.succeed { a0 = f(a0) }
   }
 
+object VarBasic extends ZIOAppDefault:
+  val makeVar = Var.make(42)
+  val makeVar1 = makeVar
+  val makeVar2 = makeVar
+
+  val program =
+    for
+      v1 <- makeVar1
+      v2 <- makeVar2
+      _ <- v1.update(_ + 1)
+      _ <- v2.update(_ + 1)
+      l <- v1.get
+      r <- v2.get
+    yield (l, r)
+
+  val run = program.debug
+
 object VarProgram extends ZIOAppDefault:
 
   val program =
