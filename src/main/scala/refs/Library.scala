@@ -25,26 +25,30 @@ object Library:
     Ref.make(LibraryState(Map.empty, Map.empty)).map { ref =>
       new Library:
         def addUser(user: User): ZIO[Any, UserExists, Unit] =
-          ref.modify { oldState =>
-            if oldState.users.contains(user.id)
-            then (Left[UserExists, Unit](UserExists(user)), oldState)
-            else
-              (
-                Right(()),
-                oldState.copy(users = oldState.users + (user.id -> user))
-              )
-          }.absolve
+          ref
+            .modify[Either[UserExists, Unit]] { oldState =>
+              if oldState.users.contains(user.id)
+              then (Left(UserExists(user)), oldState)
+              else
+                (
+                  Right(()),
+                  oldState.copy(users = oldState.users + (user.id -> user))
+                )
+            }
+            .absolve
 
         def addBook(book: Book): ZIO[Any, BookExists, Unit] =
-          ref.modify { oldState =>
-            if oldState.books.contains(book.isbn)
-            then (Left[BookExists, Unit](BookExists(book)), oldState)
-            else
-              (
-                Right(()),
-                oldState.copy(books = oldState.books + (book.isbn -> book))
-              )
-          }.absolve
+          ref
+            .modify[Either[BookExists, Unit]] { oldState =>
+              if oldState.books.contains(book.isbn)
+              then (Left(BookExists(book)), oldState)
+              else
+                (
+                  Right(()),
+                  oldState.copy(books = oldState.books + (book.isbn -> book))
+                )
+            }
+            .absolve
 
         def getUser(id: Long): ZIO[Any, Unit, User] =
           ref.get.flatMap { state =>
