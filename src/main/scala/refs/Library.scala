@@ -26,26 +26,31 @@ object Library:
       new Library:
         def addUser(user: User): ZIO[Any, UserExists, Unit] =
           ref
-            .modify[Either[UserExists, Unit]] { oldState =>
-              if oldState.users.contains(user.id)
-              then (Left(UserExists(user)), oldState)
+            .modify[Either[UserExists, Unit]] { currentState =>
+              if currentState.users.contains(user.id)
+              then (Left(UserExists(user)), currentState)
               else
                 (
                   Right(()),
-                  oldState.copy(users = oldState.users + (user.id -> user))
+                  currentState
+                    .copy(users = currentState.users + (user.id -> user))
                 )
             }
-            .absolve
+            .flatMap { // the same as the absolve below
+              case Right(unit) => ZIO.succeed(unit)
+              case Left(error) => ZIO.fail(error)
+            }
 
         def addBook(book: Book): ZIO[Any, BookExists, Unit] =
           ref
-            .modify[Either[BookExists, Unit]] { oldState =>
-              if oldState.books.contains(book.isbn)
-              then (Left(BookExists(book)), oldState)
+            .modify[Either[BookExists, Unit]] { currentState =>
+              if currentState.books.contains(book.isbn)
+              then (Left(BookExists(book)), currentState)
               else
                 (
                   Right(()),
-                  oldState.copy(books = oldState.books + (book.isbn -> book))
+                  currentState
+                    .copy(books = currentState.books + (book.isbn -> book))
                 )
             }
             .absolve
