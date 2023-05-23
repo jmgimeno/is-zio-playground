@@ -14,7 +14,7 @@ object Basic extends ZIOAppDefault:
       right <-
         (promise.await
           *> Console.printLine(" World!")).fork
-      _ <- left.join *> right.join *> up.join
+      _ <- left.join *> right.join
     yield ()
 
   val run = program
