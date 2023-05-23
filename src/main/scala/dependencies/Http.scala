@@ -13,5 +13,5 @@ final case class HttpLive() extends Http:
     ???
 
 object HttpLive:
-  val layer: ZLayer[Any, Throwable, Http] =
+  val layer: ZLayer[Any, Nothing, Http] =
     ZLayer.succeed(HttpLive())

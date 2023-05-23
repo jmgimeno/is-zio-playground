@@ -6,9 +6,9 @@ object MainWithLayers extends ZIOAppDefault:
   val run = ZIO
     .serviceWithZIO[BusinessLogic](_.run)
     .provide(
-      BusinessLogicLive.layer,
+      HttpLive.layer,
       GithubLive.layer,
-      HttpLive.layer
+      BusinessLogicLive.layer
       // ZLayer.Debug.tree
       // ZLayer.Debug.mermaid
     )
