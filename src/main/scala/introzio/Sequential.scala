@@ -50,4 +50,4 @@ object Sequential extends ZIOAppDefault:
   val printWordsNoList: ZIO[Any, Throwable, Unit] =
     ZIO.collectAllDiscard(prints)
 
-  def run = printNumbersNoVector.flatMap(l => printLine(l.toString))
+  val run: ZIO[Any, Throwable, List[Unit]] = printWords.debug
