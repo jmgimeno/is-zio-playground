@@ -2,6 +2,8 @@ package introzio
 
 import zio.*
 
+import scala.io.StdIn
+
 // This mechanism is uses for DEPENDENCY INJECTION
 
 object Environment extends ZIOAppDefault:
@@ -12,25 +14,32 @@ object Environment extends ZIOAppDefault:
   // The real ZIO.environment returns a ZEnvironment
   // we must use get to access what is inside
 
-  val anotherLogged: ZIO[MyLogger, Nothing, Unit] =
+  def writeLine(str: String): ZIO[Any, Nothing, Unit] =
+    ZIO.attempt(println(str)).orDie
+
+  def readInt(prompt: String): ZIO[Any, NumberFormatException, Int] =
+    (ZIO.attempt(print(prompt)) *> ZIO.attempt(StdIn.readInt()))
+      .refineToOrDie[NumberFormatException]
+
+  val readAndSumTwoIntsWithLogging: ZIO[MyLogger, NumberFormatException, Int] =
     for
+      x <- readInt("Number1: ")
       logger <- ZIO.environment[MyLogger]
-      _ <- logger.get.log("another")
-    yield ()
+      _ <- logger.get.log(s"I've read $x")
+      y <- readInt("Number2: ")
+      _ <- logger.get.log(s"I've also read $y")
+    yield x + y
 
-  val logged: ZIO[MyLogger, Nothing, Unit] =
-    for
-      _ <- anotherLogged
-      _ <- ZIO.attempt(println("Hola")).orDie
-      _ <- anotherLogged
-    yield ()
+  object ConsoleLogger extends MyLogger:
+    def log(s: String): ZIO[Any, Nothing, Unit] = writeLine(s)
 
-  // provideEnvironment uses a ZEnvironment
-  // we pass an anonymous instance of MyLogger
+  object NullLogger extends MyLogger:
+    def log(s: String): ZIO[Any, Nothing, Unit] = ZIO.unit
 
-  def run =
-    logged.provideEnvironment(
-      ZEnvironment(_ =>
-        ZIO.succeed(())
-      ) // s => ZIO.attempt(println(s"log: $s")).orDie)
-    )
+  val run: ZIO[Any, Nothing, Unit] =
+    readAndSumTwoIntsWithLogging
+      .foldZIO(
+        e => writeLine(s"ERROR found $e"),
+        result => writeLine(s"The sum is $result")
+      )
+      .provideEnvironment(ZEnvironment(ConsoleLogger))

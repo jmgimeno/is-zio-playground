@@ -24,7 +24,11 @@ object Sequential extends ZIOAppDefault:
     firstName.zipWith(lastName)((first, last) => s"$first $last")
 
   val helloWorld: ZIO[Any, Throwable, Unit] =
-    ZIO.attempt(print("Hello, ")) *> ZIO.attempt(println("World!"))
+//    ZIO.attempt(print("Hello, ")).flatMap { _ =>
+//      ZIO.attempt(println("World"))
+//    }
+    ZIO.attempt(print("Hello, "))
+     *> ZIO.attempt(println("World!"))
 
   val printNumbers: ZIO[Any, Throwable, IndexedSeq[Unit]] =
     ZIO.foreach(1 to 100) { n =>
