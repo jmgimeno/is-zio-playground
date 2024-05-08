@@ -20,12 +20,12 @@ object CallBackZIO extends ZIOAppDefault:
       }
     }
 
-  // @main def main =
-  //   readIntAsync { n =>
-  //     doubleAsync(n) { d =>
-  //       println(s"El resultado es $d")
-  //     }
-  //   }
+//  @main def main(): Unit =
+//    readIntCallBack { n =>
+//      doubleCallBack(n) { d =>
+//        println(s"El resultado es $d")
+//      }
+//    }
 
   val run: ZIO[Any, Nothing, Unit] = for
     n <- readIntZIO
