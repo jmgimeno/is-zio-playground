@@ -1,3 +1,5 @@
+package callbacks
+
 import scala.io.StdIn
 
 object CallBack:
@@ -10,7 +12,7 @@ object CallBack:
   def doubleCallBack[A](n: Int)(cb: Int => A): A =
     cb(2 * n)
 
-  @main def main() =
+  @main def main(): Unit =
     readIntCallBack { n =>
       doubleCallBack(n) { d =>
         println(s"El resultado es $d")

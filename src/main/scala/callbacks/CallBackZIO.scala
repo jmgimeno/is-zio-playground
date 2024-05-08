@@ -1,4 +1,4 @@
-import scala.io.StdIn
+package callbacks
 
 import zio.*
 
@@ -27,8 +27,8 @@ object CallBackZIO extends ZIOAppDefault:
   //     }
   //   }
 
-  val run = for
+  val run: ZIO[Any, Nothing, Unit] = for
     n <- readIntZIO
     d <- doubleZIO(n)
-    _ <- ZIO.attempt(println(s"Result is $d"))
+    _ <- ZIO.succeed(println(s"Result is $d"))
   yield ()
