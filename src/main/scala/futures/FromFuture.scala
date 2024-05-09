@@ -9,7 +9,8 @@ object FromFuture extends ZIOAppDefault:
   def goShoppingFuture(using ec: ExecutionContext): Future[Unit] =
     Future(println("Going to the grocery store"))
 
-  val goShoppingZIO: Task[Unit] =
+  val goShoppingZIO: ZIO[Any, Throwable, Unit] =
     ZIO.fromFuture(ec => goShoppingFuture(using ec))
-
-  val run = goShoppingZIO
+  
+  val run: ZIO[Any, Throwable, Unit] = 
+    goShoppingZIO
