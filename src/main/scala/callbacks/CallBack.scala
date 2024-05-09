@@ -13,8 +13,8 @@ object CallBack:
     cb(2 * n)
 
   @main def mainCB(): Unit =
-    readIntCallBack({ n =>
-      doubleCallBack(n)({ d =>
+    readIntCallBack { n =>
+      doubleCallBack(n) { d =>
         println(s"Double of $n is $d")
-      })
-    })
+      }
+    }

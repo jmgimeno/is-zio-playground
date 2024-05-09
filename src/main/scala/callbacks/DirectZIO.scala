@@ -1,10 +1,10 @@
 package callbacks
 
-import zio.ZIO
+import zio.{ZIO, ZIOAppDefault}
 
-object DirectZIO:
+object DirectZIO extends ZIOAppDefault:
 
-  def readInt(): ZIO[Any, Nothing, Int] =
+  val readInt: ZIO[Any, Nothing, Int] =
     ZIO.succeed {
       Direct.readInt()
     }
@@ -15,10 +15,10 @@ object DirectZIO:
       Direct.double(n)
     }
 
-  @main def mainDZ(): Unit =
+  val run: ZIO[Any, Nothing, Unit] =
     for
-      n <- readInt()
+      n <- readInt
       d <- double(n)
-      _ <- ZIO.succeed(println("El resultado es $d"))
+      _ <- ZIO.succeed(println(s"Double of $n is $d"))
     yield ()
 

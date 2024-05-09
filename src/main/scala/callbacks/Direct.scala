@@ -14,4 +14,4 @@ object Direct:
   @main def mainD(): Unit =
     val n = readInt()
     val d = double(n)
-    println("El resultado es $d")
+    println(s"Double of $n is $d")

@@ -5,17 +5,17 @@ import zio.*
 object CallBackZIO extends ZIOAppDefault:
 
   val readIntZIO: ZIO[Any, Nothing, Int] =
-    ZIO.async { callback =>
-      CallBack.readIntCallBack({ n =>
+    ZIO.async { (callback: ZIO[Any, Nothing, Int] => Unit) =>
+      CallBack.readIntCallBack { (n: Int) =>
         callback(ZIO.succeed(n))
-      })
+      }
     }
 
   def doubleZIO(n: Int): ZIO[Any, Nothing, Int] =
-    ZIO.async { callback =>
-      CallBack.doubleCallBack(n)({ d =>
+    ZIO.async { (callback: ZIO[Any, Nothing, Int] => Unit) =>
+      CallBack.doubleCallBack(n) { (d: Int) =>
         callback(ZIO.succeed(d))
-      })
+      }
     }
 
 //  @main def main(): Unit =
