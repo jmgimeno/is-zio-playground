@@ -4,20 +4,18 @@ import zio.*
 
 object CallBackZIO extends ZIOAppDefault:
 
-  import CallBack.*
-
   val readIntZIO: ZIO[Any, Nothing, Int] =
     ZIO.async { callback =>
-      readIntCallBack { n =>
+      CallBack.readIntCallBack({ n =>
         callback(ZIO.succeed(n))
-      }
+      })
     }
 
   def doubleZIO(n: Int): ZIO[Any, Nothing, Int] =
     ZIO.async { callback =>
-      doubleCallBack(n) { d =>
+      CallBack.doubleCallBack(n)({ d =>
         callback(ZIO.succeed(d))
-      }
+      })
     }
 
 //  @main def main(): Unit =
@@ -30,5 +28,5 @@ object CallBackZIO extends ZIOAppDefault:
   val run: ZIO[Any, Nothing, Unit] = for
     n <- readIntZIO
     d <- doubleZIO(n)
-    _ <- ZIO.succeed(println(s"Result is $d"))
+    _ <- ZIO.succeed(println(s"Double of $n is $d"))
   yield ()
