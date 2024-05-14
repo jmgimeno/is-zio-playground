@@ -12,7 +12,7 @@ object Contravariance:
 
   trait FoodProcessor[-Ingredient]:
     def process(ingredient: Ingredient): Drink
-    def processAndResidue[Residue <: Ingredient](ingredient: Ingredient): (Drink, Residue)
+    def processAndResidue[Residue <: Ingredient](ingredient: Residue): (Drink, Residue)
 
   summon[Apple <:< Fruit]
 
@@ -34,7 +34,7 @@ object Contravariance:
   //                 => FoodProcessor[Fruit] <:< FoodProcessor[Apple]
 
   def g(processor: FoodProcessor[Apple]) =
-    val (drink, appleRes): (Drink, Apple) =
+    val (drink, appleRes) =
       processor.processAndResidue(new Apple)
 
   g(fruitProcessor)
