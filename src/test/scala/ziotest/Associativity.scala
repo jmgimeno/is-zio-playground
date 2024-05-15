@@ -9,7 +9,7 @@ object Associativity extends ZIOSpecDefault:
     test("integer addition is associative") {
       check(int, int, int) { (x, y, z) =>
         val left = (x + y) + z
-        var right = x + (y + z)
+        val right = x + (y + z)
         assertTrue(left == right)
       }
     }
