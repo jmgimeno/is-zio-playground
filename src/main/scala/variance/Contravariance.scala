@@ -1,7 +1,5 @@
 package variance
 
-import zio.*
-
 object Contravariance:
 
   trait Fruit
@@ -12,7 +10,7 @@ object Contravariance:
 
   trait FoodProcessor[-Ingredient]:
     def process(ingredient: Ingredient): Drink
-    def processAndResidue[Residue <: Ingredient](ingredient: Residue): (Drink, Residue)
+    def processAndResidue[Ingredient1 <: Ingredient](ingredient: Ingredient1): (Drink, Ingredient1)
 
   summon[Apple <:< Fruit]
 
@@ -36,5 +34,30 @@ object Contravariance:
   def g(processor: FoodProcessor[Apple]) =
     val (drink, appleRes) =
       processor.processAndResidue(new Apple)
+//    val (drink2, orangeRes) =
+//      processor.processAndResidue(new Orange)
 
   g(fruitProcessor)
+
+  val appleProcessor: FoodProcessor[Apple] = ???
+  g(appleProcessor)
+
+  val orangeProcessor: FoodProcessor[Orange] = ???
+  // g(orangeProcessor)
+
+
+  object MySpecificProcessor extends FoodProcessor[Apple]:
+    def process(i: Apple): Drink = ???
+    def processAndResidue[A1 <: Apple](ingredient: A1): (Drink, A1) = ???
+
+  def h() =
+    MySpecificProcessor.processAndResidue(new Apple)
+
+  def gg(processor: FoodProcessor[Fruit]) =
+    val (drink, appleRes) =
+      processor.processAndResidue(new Apple)
+    val (drink2, orangeRes) =
+      processor.processAndResidue(new Orange)
+
+  // gg(appleProcessor)
+  // gg(orangeProcessor)
