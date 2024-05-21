@@ -22,6 +22,11 @@ object ExitsAndCauses extends ZIOAppDefault:
       ZIO.attempt(str.toInt).refineToOrDie[NumberFormatException]
     }
 
+  val readIntOrError2: ZIO[Any, NumberFormatException, Int] =
+    Console.readLine.flatMap { str =>
+      ZIO.attempt(str.toInt)
+    }.refineToOrDie[NumberFormatException]
+
   val effect1: ZIO[Any, IOException, Unit] =
     Console.printLine("no cause")
 
@@ -32,7 +37,7 @@ object ExitsAndCauses extends ZIOAppDefault:
 
   val effect4: ZIO[Any, IOException, Unit] = effect2.unsandbox
 
-  val effect5 =
+  val effect5: ZIO[Any, IOException, Unit] =
     effect1.foldCauseZIO(
       cause =>
         cause match
@@ -44,6 +49,7 @@ object ExitsAndCauses extends ZIOAppDefault:
       success => Console.printLine(s"Success with $success")
     )
 
+  val effect6: ZIO[Any, IOException, Unit] = 
     effect1.sandbox.foldZIO(
       cause =>
         cause match
@@ -55,8 +61,8 @@ object ExitsAndCauses extends ZIOAppDefault:
       success => Console.printLine(s"Success with $success")
     )
 
-    effect1.foldZIO(
-      ioEx => Console.printLine(s"Died with $ioEx"),
+  val effect7: ZIO[Any, IOException, Unit] = effect1.foldZIO(
+      ioEx => Console.printLine(s"Failed with $ioEx"),
       success => Console.printLine(s"Success with $success")
     )
 
@@ -68,13 +74,13 @@ object ExitsAndCauses extends ZIOAppDefault:
         .refineToOrDie[NumberFormatException]
     yield result
 
-    val getANumber2 =
-      (for
-        input <- Console.readLine("Enter a number: ")
-        result <- ZIO
-          .attempt(360 / input.toInt)
-      yield result)
-        .refineToOrDie[NumberFormatException]
+  val getANumber2 =
+    (for
+      input <- Console.readLine("Enter a number: ")
+      result <- ZIO
+        .attempt(360 / input.toInt)
+    yield result)
+      .refineToOrDie[NumberFormatException]
 
   val run =
     for
