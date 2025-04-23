@@ -10,19 +10,29 @@ object MyIOExercises:
   }
 
   val getCurrentTime: MyIO[Double] =
-    ???
+    MyIO(System.currentTimeMillis())
 
   def duration[A](ioa: MyIO[A]): MyIO[(A, Double)] =
-    ???
+    getCurrentTime.flatMap { start =>
+      ioa.flatMap { a =>
+        getCurrentTime.map { end =>
+          (a, end - start)
+        }
+      }
+    }
 
   def durationFor[A](ioa: MyIO[A]): MyIO[(A, Double)] =
-    ???
+    for {
+      start <- getCurrentTime
+      a <- ioa
+      end <- getCurrentTime
+    } yield (a, end - start)
 
-  val readConsole: MyIO[String] =
-    ???
+  lazy val readConsole: MyIO[String] =
+    MyIO(scala.io.StdIn.readLine())
 
   def writeConsole[A](a: A): MyIO[Unit] =
-    ???
+    MyIO(println(a))
 
   // Execució / NO Transparència referencial
   def greetImperative(): Unit =
@@ -31,8 +41,13 @@ object MyIOExercises:
     println(s"Hola $name")
 
   // Descripció / Transparèncoa referencial
-  val greet: MyIO[Unit] =
-    ???
+  lazy val greet: MyIO[Unit] =
+    for {
+      _ <- writeConsole("Entra el teu nom: ")
+      name <- readConsole
+      _ <- writeConsole(s"Hola $name")
+    } yield ()
+
 
   @main def duration(): Unit = {
     val computation: MyIO[(Int, Double)] = durationFor(longComputation)
@@ -51,3 +66,13 @@ object MyIOExercises:
     val tenPatata = onePatata.repeat(9)
     tenPatata.unsafeRun()
 
+  def factorial(n: Int): MyIO[Int] = MyIO((1 to n).product)
+
+  @main def factorialRun(): Unit = {
+    (for {
+      input <- readConsole
+      n = input.toInt
+      f <- factorial(n).when(n > 5)(-1)
+      _ <- writeConsole(f)
+    } yield()).unsafeRun()
+  }

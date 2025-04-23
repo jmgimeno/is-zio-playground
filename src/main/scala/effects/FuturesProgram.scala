@@ -7,13 +7,22 @@ import scala.concurrent.duration.*
 
 object FuturesProgram:
 
-  def twice =
+  def twice: Future[Unit] =
     Future(println("Hello"))
       .flatMap(_ => Future(println("Hello")))
 
-  def notTwice =
+  def notTwice: Future[Unit] =
     val hello = Future(println("Hello"))
     hello.flatMap(_ => hello)
 
-  @main def main() =
-    Await.ready(twice, 1.second)
+  def factorial(n: Int): Int = (1 to n).product
+
+  def factorialAsync(n: Int): Future[Int] = Future(factorial(n))
+
+  def doubleAsync(n: Int): Future[Int] = Future(n * 2)
+
+  def factorialOfDouble(n: Int): Future[Int] =
+    doubleAsync(n).flatMap(d => factorialAsync(d))
+
+  @main def main(): Unit =
+    Await.ready(notTwice, 1.second)
