@@ -10,5 +10,9 @@ object MyIOProgram:
     val hello = MyIO(println("Hello"))
     hello.flatMap(_ => hello)
 
-  @main def run() =
+  def alsoAlsoTwice: MyIO[Unit] =
+    val hello = MyIO(println("Hello"))
+    hello.repeat(2)
+
+  @main def run(): Unit =
     alsoTwice.unsafeRun()

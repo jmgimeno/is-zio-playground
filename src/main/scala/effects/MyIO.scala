@@ -12,8 +12,7 @@ class MyIO[A](val unsafeRun: () => A):
     )
 
   def repeat(n: Int): MyIO[A] =
-    if (n == 0) then this
-    else this.flatMap(_ => repeat(n - 1))
+    ???
 
 object MyIO:
   def apply[A](a: => A): MyIO[A] =
