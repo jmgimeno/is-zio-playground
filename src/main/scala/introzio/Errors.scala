@@ -12,14 +12,22 @@ object Errors extends ZIOAppDefault:
     (ZIO.attempt(print(prompt)) *> ZIO.attempt(StdIn.readInt()))
       .refineToOrDie[NumberFormatException]
 
-  val readAndSumTwoInts: ZIO[Any, NumberFormatException, Int] =
+  val readAndSumTwoInts: ZIO[Any, NumberFormatException, Int] = {
     for
       x <- readInt("Number1: ")
       y <- readInt("Number2: ")
     yield x + y
+  }
+//
+//  def run: ZIO[Any, Nothing, Unit] =
+//    readAndSumTwoInts.foldZIO(
+//      e => writeLine(s"ERROR: Bad number ${e.toString}"),
+//      sum => writeLine(s"The sum is $sum")
+//    )
 
-  def run: ZIO[Any, Nothing, Unit] =
-    readAndSumTwoInts.foldZIO(
-      e => writeLine(s"ERROR: Bad number ${e.toString}"),
-      sum => writeLine(s"The sum is $sum")
-    )
+    def run =
+      readAndSumTwoInts.fold(
+        e => s"ERROR: Bad number ${e.toString}",
+        sum => s"The sum is $sum"
+      ).flatMap(msg => writeLine(msg))
+
