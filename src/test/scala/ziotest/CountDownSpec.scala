@@ -2,7 +2,6 @@ package ziotest
 
 import zio.*
 import zio.test.*
-import zio.test.Assertion.*
 
 object CountDownSpec extends ZIOSpecDefault {
 
