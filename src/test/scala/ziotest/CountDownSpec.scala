@@ -24,11 +24,10 @@ object CountDownSpec extends ZIOSpecDefault {
     test("after 1 second it has printed 5 & 4 and it's not finished") {
       for {
         fiber <- coundDown.fork
-        _ <- TestConsole.clearOutput
         _ <- TestClock.adjust(1.second)
         output <- TestConsole.output
         exit <- fiber.poll
-      } yield assertTrue(output == Vector("4\n") && exit.isEmpty)
+      } yield assertTrue(output == Vector("5\n", "4\n") && exit.isEmpty)
     },
     test("after 2 seconds prints a 3 and it's not finished") {
       for {
