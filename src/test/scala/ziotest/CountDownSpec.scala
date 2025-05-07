@@ -45,8 +45,11 @@ object CountDownSpec extends ZIOSpecDefault {
         fiber <- coundDown.fork
         _ <- TestClock.adjust(5.seconds)
         output <- TestConsole.output
-        exit <- fiber.join
-      } yield assertTrue(output == Vector("5\n", "4\n", "3\n", "2\n", "1\n"))
+        exit <- fiber.poll
+      } yield assertTrue(
+        output == Vector("5\n", "4\n", "3\n", "2\n", "1\n")
+          && exit == Some(Exit.succeed(()))
+      )
     }
   ) @@ silent
 }

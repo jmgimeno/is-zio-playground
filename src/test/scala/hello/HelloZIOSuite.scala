@@ -13,6 +13,6 @@ object HelloZIOSuite extends ZIOSpecDefault:
       for
         _ <- HelloZIO.run
         output <- TestConsole.output
-      yield assertTrue(output(0) == "Hello, ZIO\n")
+      yield assertTrue(output == Vector("Hello, ZIO\n"))
     }
   )
