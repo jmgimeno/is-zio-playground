@@ -2,6 +2,7 @@ package ziotest
 
 import zio.*
 import zio.test.*
+import zio.test.TestAspect.*
 
 object CountDownSpec extends ZIOSpecDefault {
 
@@ -16,7 +17,7 @@ object CountDownSpec extends ZIOSpecDefault {
     test("prints 5 immediately and it's not finished") {
       for {
         fiber <- coundDown.fork
-        _ <- TestClock.adjust(0.seconds) // TODO: Don't know why it is needed
+        _ <- TestClock.adjust(0.seconds)
         output <- TestConsole.output
         exit <- fiber.poll
       } yield assertTrue(output == Vector("5\n") && exit.isEmpty)
@@ -47,5 +48,5 @@ object CountDownSpec extends ZIOSpecDefault {
         exit <- fiber.join
       } yield assertTrue(output == Vector("5\n", "4\n", "3\n", "2\n", "1\n"))
     }
-  )
+  ) @@ silent
 }
