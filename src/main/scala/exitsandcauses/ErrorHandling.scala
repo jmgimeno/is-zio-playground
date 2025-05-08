@@ -38,7 +38,7 @@ object ErrorHandling extends ZIOAppDefault {
   private val zio5 : ZIO[Any, Nothing, Int]  = zio4.orDie
 
   val run = zio5.foldCauseZIO(
-    e => Console.printLine(s"error $e"),
+    cause => Console.printLine(s"error $cause"),
     int => Console.printLine(int * 5)
   )
 }
