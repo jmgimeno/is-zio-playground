@@ -19,8 +19,8 @@ object SumLines3 extends ZIOAppDefault:
     def loop(sum: Int): ZIO[Any, Throwable, Int] =
       for
         line <- ZIO.attempt(file.readLine())
-        sum <- if line ne null then loop(sum + line.toInt) else ZIO.succeed(sum)
-      yield sum
+        result <- if line ne null then loop(sum + line.toInt) else ZIO.succeed(sum)
+      yield result
     loop(0)
 
   val sumFile = for {

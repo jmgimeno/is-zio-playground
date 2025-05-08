@@ -19,14 +19,14 @@ object SumLines4 extends ZIOAppDefault:
     def loop(sum: Int): ZIO[Any, Throwable, Int] =
       for
         line <- ZIO.attempt(file.readLine())
-        sum <-
+        result <-
           if line ne null then
             for
               num <- ZIO.attempt(line.toInt)
-              sum <- loop(sum + num)
-            yield sum
+              updatedSum <- loop(sum + num)
+            yield updatedSum
           else ZIO.succeed(sum)
-      yield sum
+      yield result
     loop(0)
 
   val sumFile = for {

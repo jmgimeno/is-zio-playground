@@ -1,10 +1,11 @@
 package files
 
 import zio.*
-import java.nio.file.*
-import java.io.BufferedReader
 
-object SumLines5 extends ZIOAppDefault:
+import java.io.BufferedReader
+import java.nio.file.*
+
+object SumLines6 extends ZIOAppDefault:
 
   def sumLines(fname: String): ZIO[Any, Throwable, Int] =
     for
@@ -16,18 +17,20 @@ object SumLines5 extends ZIOAppDefault:
     yield sum
 
   def sumLines(file: BufferedReader): ZIO[Any, Throwable, Int] =
-    def loop(sum: Int): ZIO[Any, Throwable, Int] =
+    var sum = 0 // Safe cause the mutation will be delayed, and var is not shared
+                // sum is not RT buts its modifications inside a ZIO are
+                // Can use a Ref to make it RT
+    def loop: ZIO[Any, Throwable, Unit] =
       for
         line <- ZIO.attempt(file.readLine())
-        result <-
-          if line ne null then
-            for
-              num <- ZIO.attempt(line.toInt).orElseSucceed(0)
-              updatedSum <- loop(sum + num)
-            yield updatedSum
-          else ZIO.succeed(sum)
-      yield result
-    loop(0)
+        _ <-
+          (for
+            num <- ZIO.attempt(line.toInt).orElseSucceed(0)
+            _ <- ZIO.attempt(sum += num)
+            _ <- loop
+          yield ()).when(line ne null)
+      yield ()
+    loop.as(sum)
 
   val sumFile = for {
     fileName <- Console.readLine("File name? ")
