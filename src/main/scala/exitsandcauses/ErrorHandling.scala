@@ -3,6 +3,7 @@ package exitsandcauses
 import zio.*
 import zio.Cause.*
 
+import java.io.IOException
 import java.lang
 
 object ErrorHandling extends ZIOAppDefault {
@@ -16,7 +17,7 @@ object ErrorHandling extends ZIOAppDefault {
     int => Console.printLine(int * 2)
   )
 
-  val run2 = zio3.sandbox.foldZIO(
+  val run2 = zio1.sandbox.foldZIO(
     cause => { cause match
       case Fail(str,_) => Console.printLine(s"failed with $str")
       case Die(t, _) => Console.printLine("ha fallat")
@@ -37,8 +38,13 @@ object ErrorHandling extends ZIOAppDefault {
 
   private val zio5 : ZIO[Any, Nothing, Int]  = zio4.orDie
 
-  val run = zio5.foldCauseZIO(
+  val run6 = zio4.foldCauseZIO(
     cause => Console.printLine(s"error $cause"),
     int => Console.printLine(int * 5)
   )
+
+  val run7 = zio4.orElse(Console.printLine("patata"))
+
+
+  val run = run7
 }

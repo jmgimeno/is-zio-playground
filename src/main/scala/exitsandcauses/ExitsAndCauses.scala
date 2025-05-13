@@ -33,7 +33,7 @@ object ExitsAndCauses extends ZIOAppDefault:
   val effect2: ZIO[Any, Cause[IOException], Unit] =
     Console.printLine("with cause").sandbox
 
-  // val effect3 = effect1.unsandbox
+//  val effect3 = effect1.unsandbox
 
   val effect4: ZIO[Any, IOException, Unit] = effect2.unsandbox
 
