@@ -5,7 +5,7 @@ import java.io.IOException
 
 object Example4 extends ZIOAppDefault {
 
-  def run =
+  val run =
     for {
       a <- readNumber("Enter the first number  (a): ")
       b <- readNumber("Enter the second number (b): ").repeatUntil(_ != 0)
@@ -26,7 +26,7 @@ object Example4 extends ZIOAppDefault {
     val readInt: ZIO[Any, NumberFormatException, Int] =
       ignoreIOE.flatMap(parseInput)
     readInt
-      .retryWhile(_ => true)
+      .retry(Schedule.forever)
       .orDie
   }
 

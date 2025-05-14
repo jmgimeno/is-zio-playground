@@ -5,7 +5,7 @@ import java.io.IOException
 
 object Example3 extends ZIOAppDefault {
 
-  def run =
+  val run =
     for {
       a <- readNumber("Enter the first number  (a): ")
       b <- readNumber("Enter the second number (b): ").repeatUntil(_ != 0)

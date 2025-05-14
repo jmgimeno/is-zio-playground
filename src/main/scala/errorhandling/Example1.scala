@@ -5,8 +5,13 @@ import java.io.IOException
 
 object Example1 extends ZIOAppDefault {
 
-  def run =
-    for {
+  val run =
+    program.sandbox.foldZIO(
+      cause => Console.printLine(s"error $cause"),
+      value => Console.printLine(s"value $value")
+    )
+
+  lazy val program =  for {
       a <- readNumber("Enter the first number  (a): ")
       b <- readNumber("Enter the second number (b): ")
       r <- divide(a, b)
@@ -17,8 +22,5 @@ object Example1 extends ZIOAppDefault {
     Console.print(msg) *> Console.readLine.map(_.toInt)
 
   def divide(a: Int, b: Int): ZIO[Any, Nothing, Int] =
-    if (b == 0)
-      ZIO.die(new ArithmeticException("divide by zero")) // unexpected error
-    else
       ZIO.succeed(a / b)
 }
