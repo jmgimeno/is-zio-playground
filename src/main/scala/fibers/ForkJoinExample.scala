@@ -1,7 +1,6 @@
 package fibers
 
 import zio.*
-import fibers.debugThread
 
 object ForkJoinExample extends ZIOAppDefault {
 
@@ -11,7 +10,7 @@ object ForkJoinExample extends ZIOAppDefault {
   lazy val doSomethingElse: UIO[Unit] =
     ZIO.debug("do something else!").delay(2.seconds)
 
-  def run = for {
+  val run = for {
     _     <- ZIO.debug("Starting the program!")
     fiber <- doSomething.fork
     _     <- doSomethingElse
