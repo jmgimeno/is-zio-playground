@@ -3,7 +3,7 @@ package fibers
 import zio.*
 
 object SpecificScope extends ZIOAppDefault:
-  def run =
+  val run =
     ZIO.scoped {
       for {
         scope <- ZIO.scope

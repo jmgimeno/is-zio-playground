@@ -5,10 +5,10 @@ import fibers.debugThread
 
 object ForkJoinExample extends ZIOAppDefault {
 
-  val doSomething: UIO[Unit] =
+  lazy val doSomething: UIO[Unit] =
     ZIO.debug("do something!").delay(10.seconds)
 
-  val doSomethingElse: UIO[Unit] =
+  lazy val doSomethingElse: UIO[Unit] =
     ZIO.debug("do something else!").delay(2.seconds)
 
   def run = for {

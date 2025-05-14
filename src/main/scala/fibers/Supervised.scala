@@ -3,12 +3,12 @@ package fibers
 import zio.*
 
 object Supervised extends ZIOAppDefault:
-  val barJob: ZIO[Any, Nothing, Long] =
+  lazy val barJob: ZIO[Any, Nothing, Long] =
     ZIO
       .debug("Bar: still running!")
       .repeat(Schedule.fixed(1.seconds))
 
-  val fooJob: ZIO[Any, Nothing, Unit] =
+  lazy val fooJob: ZIO[Any, Nothing, Unit] =
     for {
       _ <- ZIO.debug("Foo: started!")
       _ <- barJob.fork
@@ -16,7 +16,7 @@ object Supervised extends ZIOAppDefault:
       _ <- ZIO.debug("Foo: finished!")
     } yield ()
 
-  def run =
+  val run =
     for
       f <- fooJob.fork
       _ <- f.join

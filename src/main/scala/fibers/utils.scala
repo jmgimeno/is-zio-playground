@@ -2,9 +2,9 @@ package fibers
 
 import zio.*
 
-extension [R, E, A](zio: ZIO[R, E, A])
+extension [R, E, A](zio: => ZIO[R, E, A])
   def debugThread: ZIO[R, E, A] =
-    val threadName = Thread.currentThread().getName()
+    val threadName = Thread.currentThread().getName
     for
       fiberId <- ZIO.fiberId
       name = s"[fiber-${fiberId.id} @ $threadName]"

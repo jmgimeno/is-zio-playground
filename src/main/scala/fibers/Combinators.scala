@@ -13,29 +13,29 @@ object Combinators extends ZIOAppDefault:
       <* Console.printLine(s"End $a").orDie)
       .onInterrupt(Console.printLine(s"Interrupted $a").orDie)
 
-  val a = effect(1, 5.seconds)
-  val b = effect(0, 7.seconds)
+  lazy val a = effect(1, 5.seconds)
+  lazy val b = effect(0, 7.seconds)
 
-  val sequential =
+  lazy val sequential =
     for result <- a.zip(b)
     yield result
 
-  val parallel =
+  lazy val parallel =
     for result <- a.zipPar(b)
     yield result
 
-  val race =
+  lazy val race =
     for result <- a.raceEither(b)
     yield result
 
-  val collectAllPar: ZIO[Any, Unit, IndexedSeq[Int]] =
+  lazy val collectAllPar: ZIO[Any, Unit, IndexedSeq[Int]] =
     val effects = (0 to 10).map(effect(_, 1.second))
     ZIO.collectAllPar(effects)
 
-  val foreachParError =
+  lazy val foreachParError =
     ZIO.foreachPar(List(0, 2, 0, 3, 4))(effect(_, 500.millis))
 
-  val validateParError =
+  lazy val validateParError =
     ZIO.validatePar(List(0, 2, 0, 3, 4))(effect(_, 500.millis))
 
   val run = validateParError.debug

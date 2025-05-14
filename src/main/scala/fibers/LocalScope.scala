@@ -3,12 +3,12 @@ package fibers
 import zio.*
 
 object LocalScope extends ZIOAppDefault:
-  val barJob: ZIO[Any, Nothing, Long] =
+  lazy val barJob: ZIO[Any, Nothing, Long] =
     ZIO
       .debug("Bar: still running!")
       .repeat(Schedule.fixed(1.seconds))
 
-  val fooJob: ZIO[Scope, Nothing, Unit] =
+  lazy val fooJob: ZIO[Scope, Nothing, Unit] =
     (for {
       _ <- ZIO.debug("Foo: started!")
       _ <- barJob.forkScoped

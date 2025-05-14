@@ -4,7 +4,7 @@ import zio.*
 
 object ForkJoinFailedFiberExample extends ZIOAppDefault {
 
-  val doSomething: ZIO[Any, String, Nothing] =
+  lazy val doSomething: ZIO[Any, String, Nothing] =
     ZIO.debug("do something!").delay(2.seconds) *> ZIO.fail("Boom")
 
   def run = for {
