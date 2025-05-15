@@ -23,6 +23,8 @@ object ForkDaemonExample extends ZIOAppDefault {
     fiber <- parent.fork
     _ <- ZIO.sleep(1.seconds)
     _ <- fiber.interrupt
+    _ <- ZIO.debug("run continues")
     _ <- ZIO.sleep(10.seconds)
+    _ <- ZIO.debug("run finished")
   } yield ()
 }

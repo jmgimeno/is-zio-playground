@@ -4,8 +4,8 @@ import zio.*
 
 object ForkJoinExample extends ZIOAppDefault {
 
-  lazy val doSomething: UIO[Unit] =
-    ZIO.debug("do something!").delay(10.seconds)
+  lazy val doSomething: UIO[Int] =
+    ZIO.debug("do something!").delay(10.seconds) *> ZIO.succeed(42)
 
   lazy val doSomethingElse: UIO[Unit] =
     ZIO.debug("do something else!").delay(2.seconds)

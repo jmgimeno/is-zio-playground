@@ -7,7 +7,10 @@ object InterruptFiberExample extends ZIOAppDefault {
     ZIO
       .debug("some long running task!")
       .repeat(Schedule.spaced(2.seconds))
-      .onInterrupt(ZIO.debug("I've been interrupted"))
+      .onInterrupt(
+        ZIO.debug("Begin cleanup") *>
+          ZIO.sleep(5.seconds) *>
+          ZIO.debug("End cleanup"))
 
   val run =
     for {
