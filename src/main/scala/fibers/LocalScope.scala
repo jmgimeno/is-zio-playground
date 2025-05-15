@@ -7,16 +7,18 @@ object LocalScope extends ZIOAppDefault:
     ZIO
       .debug("Bar: still running!")
       .repeat(Schedule.fixed(1.seconds))
+      .onInterrupt(_ => ZIO.debug("Bar: interrupted"))
 
-  lazy val fooJob: ZIO[Scope, Nothing, Unit] =
-    (for {
+  lazy val fooJob: ZIO[Scope, Nothing, Unit] = {
+    for {
       _ <- ZIO.debug("Foo: started!")
       _ <- barJob.forkScoped
       _ <- ZIO.sleep(2.seconds)
       _ <- ZIO.debug("Foo: finished!")
-    } yield ()).onInterrupt(_ => ZIO.debug("Foo: interrupted!"))
+    } yield ()
+  }.onInterrupt(_ => ZIO.debug("Foo: interrupted!"))
 
-  def run =
+  val run =
     for {
       _ <- ZIO.scoped {
         for {
