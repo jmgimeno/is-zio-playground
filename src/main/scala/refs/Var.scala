@@ -33,24 +33,28 @@ object VarBasic extends ZIOAppDefault:
 
   val run = program.debug
 
-object VarProgram extends ZIOAppDefault:
+object VarProgramOneFiber extends ZIOAppDefault:
 
-  val programOk =
+  val programOneFiber =
     for
       shared <- Var.make(0)
-      _ <- ZIO.foreachDiscard(1 to 10000) { _ =>
+      _ <- ZIO.foreachDiscard(1 to 10_000) { _ =>
         shared.update(_ + 1)
       }
       result <- shared.get
     yield result
 
-  val programBad =
+  val run = programOneFiber.debug
+
+object VarProgramManyFibers extends ZIOAppDefault:
+
+  val programManyFibers =
     for
       shared <- Var.make(0)
-      _ <- ZIO.foreachParDiscard(1 to 10000) { _ =>
+      _ <- ZIO.foreachParDiscard(1 to 10_000) { _ =>
         shared.update(_ + 1)
       }
       result <- shared.get
     yield result
 
-  val run = programBad.debug
+  val run = programManyFibers.debug

@@ -62,7 +62,7 @@ object Library:
 
         def getBook(isbn: String): ZIO[Any, Unit, Book] =
           ref.get.flatMap { state =>
-            ZIO.attempt(state.books(isbn)).mapError(_ => ())
+            ZIO.attempt(state.books(isbn)).orElseFail(())
           }
     }
 
