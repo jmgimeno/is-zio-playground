@@ -10,9 +10,8 @@ final case class BusinessLogicLive(github: Github) extends BusinessLogic:
     for
       issues <- github.getIssues("zio")
       comment = Comment("I am working on this!")
-      _ <- ZIO.getOrFail(issues.headOption).flatMap { issue =>
-        github.postComment(issue, comment)
-      }
+      issue <- ZIO.getOrFail(issues.headOption)
+      _ <- github.postComment(issue, comment)
     yield ()
 
 object BusinessLogicLive:

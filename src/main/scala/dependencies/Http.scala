@@ -8,9 +8,9 @@ trait Http:
 
 final case class HttpLive() extends Http:
   def get(url: String): ZIO[Any, Throwable, Chunk[Byte]] =
-    ???
+    ZIO.debug(s"connecting to $url to get").as(Chunk.empty)
   def post(url: String, body: Chunk[Byte]): ZIO[Any, Throwable, Chunk[Byte]] =
-    ???
+    ZIO.debug(s"connecting to $url to post $body").as(Chunk.empty)
 
 object HttpLive:
   val layer: ZLayer[Any, Nothing, Http] =

@@ -1,5 +1,5 @@
 package dependencies
 
-trait Issue
+final case class  Issue(id: Int)
 
-final case class Comment(text: String) extends Issue
+final case class Comment(text: String)
