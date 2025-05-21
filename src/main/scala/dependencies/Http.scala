@@ -7,10 +7,14 @@ trait Http:
   def post(url: String, body: Chunk[Byte]): ZIO[Any, Throwable, Chunk[Byte]]
 
 final case class HttpLive() extends Http:
+
   def get(url: String): ZIO[Any, Throwable, Chunk[Byte]] =
-    ZIO.debug(s"connecting to $url to get").as(Chunk.empty)
+    ZIO.debug(s"connecting to $url to get")
+      .as(Chunk.fromArray("get OK".getBytes))
+
   def post(url: String, body: Chunk[Byte]): ZIO[Any, Throwable, Chunk[Byte]] =
-    ZIO.debug(s"connecting to $url to post $body").as(Chunk.empty)
+    ZIO.debug(s"connecting to $url to post $body")
+      .as(Chunk.fromArray("post OK".getBytes))
 
 object HttpLive:
   val layer: ZLayer[Any, Nothing, Http] =
