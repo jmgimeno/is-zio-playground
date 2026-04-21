@@ -29,8 +29,22 @@ object MyIOProgram:
     hello.repeat(2)
   }
 
+  lazy val complexProgram: MyIO[Unit] = {
+    for {
+      _ <- MyIO {
+        print("Enter an integer: ")
+      }
+      n <- MyIO {
+        scala.io.StdIn.readInt()
+      }
+      _ <- MyIO {
+        println("2 * patata")
+      }.repeat(n / 2).when(n % 2 == 0)(())
+    } yield ()
+  }
+
   @main def run(): Unit = {
-    twiceWithRepeat.unsafeRun()
+    complexProgram.unsafeRun()
   }
   
   
