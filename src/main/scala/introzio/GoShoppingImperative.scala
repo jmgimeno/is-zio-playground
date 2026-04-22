@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit.*
 
 object GoShoppingImperative:
 
-  @main def imperative() =
+  @main def imperative(): Unit =
 
-    def goShoppingUnsafe: Unit =
+    val goShoppingUnsafe: Unit =
       println("Going to the grocery store")
 
     val scheduler: ScheduledExecutorService =
@@ -15,7 +15,7 @@ object GoShoppingImperative:
 
     println("before")
     scheduler.schedule(
-      new Runnable { def run: Unit = goShoppingUnsafe },
+      new Runnable { def run(): Unit = goShoppingUnsafe },
       10,
       TimeUnit.SECONDS
     )
