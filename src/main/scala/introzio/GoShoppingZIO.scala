@@ -12,7 +12,7 @@ object GoShoppingZIO extends ZIOAppDefault:
 
   val run: ZIO[Any, Throwable, Unit] =
     for
-      _ <- ZIO.debug("before")
+      _ <- ZIO.attempt(println("before"))
       _ <- goShoppingLater
-      _ <- ZIO.debug("after")
+      _ <- ZIO.attempt(println("after"))
     yield ()

@@ -2,12 +2,12 @@ package effects
 
 object MyIOProgram:
 
-  val twice: MyIO[Unit] = {
+  lazy val twice: MyIO[Unit] = {
     MyIO(println("Hello"))
       .flatMap(_ => MyIO(println("Hello")))
   }
 
-  val alsoTwice: MyIO[Unit] = {
+  lazy val alsoTwice: MyIO[Unit] = {
     val hello = MyIO(println("Hello"))
     hello.flatMap(_ => hello)
   }
@@ -17,7 +17,7 @@ object MyIOProgram:
     println("hello")
   }
 
-  val twiceWithFor: MyIO[Unit] = {
+  lazy val twiceWithFor: MyIO[Unit] = {
     for {
       _ <- MyIO(println("hello"))
       _ <- MyIO(println("hello"))
@@ -39,12 +39,11 @@ object MyIOProgram:
       }
       _ <- MyIO {
         println("2 * patata")
-      }.repeat(n / 2).when(n % 2 == 0)(())
+      }.repeat(n / 2).when(n % 2 == 0)(println("n is odd"))
     } yield ()
   }
 
   @main def run(): Unit = {
     complexProgram.unsafeRun()
   }
-  
   

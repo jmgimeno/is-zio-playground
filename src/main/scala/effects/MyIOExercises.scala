@@ -75,11 +75,14 @@ object MyIOExercises:
     val tenPatata = onePatata.repeat(9)
     tenPatata.unsafeRun()
 
-  def factorial(n: Int): MyIO[Int] = MyIO((1 to n).product)
+  def factorial(n: Int): MyIO[Int] = 
+    MyIO((1 to n).product)
 
   def factorialIO(n: Int): MyIO[Int] =
     if n <= 1 then MyIO(1)
-    else factorialIO(n - 1).map(_ * n)
+    else for {
+      f <- factorialIO(n - 1)
+    } yield f * n
 
   @main def factorialRun(): Unit = {
     (for {
