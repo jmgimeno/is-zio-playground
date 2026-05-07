@@ -4,17 +4,17 @@ import zio.*
 
 object ForkJoinExample extends ZIOAppDefault {
 
-  lazy val doSomething: UIO[Int] =
+  lazy val doSomething: ZIO[Any, Nothing, Int] =
     ZIO.debug("do something!").delay(10.seconds) *> ZIO.succeed(42)
 
-  lazy val doSomethingElse: UIO[Unit] =
+  lazy val doSomethingElse: ZIO[Any, Nothing, Unit] =
     ZIO.debug("do something else!").delay(2.seconds)
 
   val run = for {
     _     <- ZIO.debug("Starting the program!")
     fiber <- doSomething.fork
     _     <- doSomethingElse
-    _     <- fiber.join // Wait for the fiber to complete
-    _     <- ZIO.debug("The fiber has joined!")
+    res   <- fiber.join // Wait for the fiber to complete
+    _     <- ZIO.debug(s"The fiber has joined with vule $res!")
   } yield ()
 }

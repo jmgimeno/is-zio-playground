@@ -3,10 +3,11 @@ package fibers
 import zio.*
 
 object InterruptFiberExample extends ZIOAppDefault {
-  lazy val doSomething: ZIO[Any, Nothing, Long] =
+  lazy val doSomething: ZIO[Any, Nothing, Unit] =
     ZIO
       .debug("some long running task!")
       .repeat(Schedule.spaced(2.seconds))
+      .unit
       .onInterrupt(
         ZIO.debug("Begin cleanup") *>
           ZIO.sleep(5.seconds) *>
