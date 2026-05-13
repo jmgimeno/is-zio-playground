@@ -41,8 +41,8 @@ object RefSynchronized extends ZIOAppDefault {
   } yield ()
 
   def updateAndLog[A](
-      ref: Ref.Synchronized[A]
-  )(f: A => A): ZIO[Any, Nothing, (A, A)] =
+                       ref: Ref.Synchronized[A]
+                     )(f: A => A): ZIO[Any, Nothing, (A, A)] =
     ref
       .modifyZIO { oldValue =>
         val newValue = f(oldValue)
