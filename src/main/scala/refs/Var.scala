@@ -3,17 +3,17 @@ package refs
 import zio.*
 
 trait Var[A]:
-  def get: UIO[A]
-  def set(a: A): UIO[Unit]
-  def update(f: A => A): UIO[Unit]
+  def get: ZIO[Any, Nothing, A]
+  def set(a: A): ZIO[Any, Nothing, Unit]
+  def update(f: A => A): ZIO[Any, Nothing, Unit]
 
 object Var:
-  def make[A](a: A): UIO[Var[A]] = ZIO.succeed {
+  def make[A](a: A): ZIO[Any, Nothing, Var[A]] = ZIO.succeed {
     new:
       var a0 = a
-      def get: UIO[A] = ZIO.succeed { a0 }
-      def set(a: A): UIO[Unit] = ZIO.succeed { a0 = a }
-      def update(f: A => A): UIO[Unit] = ZIO.succeed { a0 = f(a0) }
+      def get: ZIO[Any, Nothing, A] = ZIO.succeed { a0 }
+      def set(a: A): ZIO[Any, Nothing, Unit] = ZIO.succeed { a0 = a }
+      def update(f: A => A): ZIO[Any, Nothing, Unit] = ZIO.succeed { a0 = f(a0) }
   }
 
 object VarBasic extends ZIOAppDefault:

@@ -5,13 +5,13 @@ import java.util.concurrent.atomic.AtomicReference
 import zio.*
 
 trait Ref[A]:
-  def modify[B](f: A => (B, A)): UIO[B]
-  def get: UIO[A] = modify(a => (a, a))
-  def set(a: A): UIO[Unit] = modify(_ => ((), a))
-  def update[B](f: A => A): UIO[Unit] = modify(a => ((), f(a)))
+  def modify[B](f: A => (B, A)): ZIO[Any, Nothing, B]
+  def get: ZIO[Any, Nothing, A] = modify(a => (a, a))
+  def set(a: A): ZIO[Any, Nothing, Unit] = modify(_ => ((), a))
+  def update[B](f: A => A): ZIO[Any, Nothing, Unit] = modify(a => ((), f(a)))
 
 object Ref:
-  def make[A](a: A): UIO[Ref[A]] =
+  def make[A](a: A): ZIO[Any, Nothing, Ref[A]] =
     ZIO.succeed {
       new:
         val atomic = new AtomicReference(a)
