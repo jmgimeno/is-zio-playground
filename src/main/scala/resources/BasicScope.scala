@@ -6,7 +6,7 @@ import java.io.IOException
 object BasicScope extends ZIOAppDefault:
 
   val open: IO[IOException, String] =
-    Console.printLine("acquiring") *> ZIO.succeed("patata")
+    Console.printLine("acquiring").as("patata")
 
   def close(s: String): UIO[Unit] =
     Console.printLine(s"releasing $s").orDie
@@ -15,14 +15,12 @@ object BasicScope extends ZIOAppDefault:
     ZIO.acquireRelease(open)(close)
 
   val workflow: ZIO[Scope, IOException, Int] = resource.flatMap { str =>
-    ZIO.sleep(3.seconds) *>
-      Console.printLine(s"using $str") *>
-      ZIO.succeed(42)
+    Console.printLine(s"using $str").delay(3.seconds).as(42)
   }
 
-  val globalScope = workflow
+  val globalScope: ZIO[Scope, IOException, Int] = workflow
 
-  val localScope =
+  val localScope: ZIO[Any, IOException, Unit] =
     for
       _ <- Console.printLine("begin program")
       _ <- ZIO.scoped {
